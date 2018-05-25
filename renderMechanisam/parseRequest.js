@@ -29,7 +29,7 @@ module.exports={
 
         parseInit(data,reqObj);
         parseScene(data.Content,reqObj);
-        
+
         return reqObj;
     },
 
@@ -57,7 +57,7 @@ function parseScene(data,reqObj){
     for(let asset of assets){
         // clone object
         let schema = JSON.parse(JSON.stringify(sceneSchema));
-        
+
         // for script object (key and value)
         let scriptSch = {};
 
@@ -65,7 +65,7 @@ function parseScene(data,reqObj){
             // console.log(prop)
             assetProp(prop,asset,reqObj,schema,scriptSch);
 
-        }   
+        }
         reqObj['scenes'].push(schema);
         reqObj['scripts'].push(scriptSch);
         // console.log(schema);
@@ -80,57 +80,55 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
         //name of .apex
         let project_name = asset[prop].split("\\").pop();
         project_name.indexOf(".aepx") == -1 ?project_name += '.aepx': project_name;
-        schema['aep'] = project_name;
-        
+        schema['template'] = project_name;
+
         //ading project assets path
         schema['assets'].push({'type': "project",'name': project_name , 'src': asset[prop] });
     }
     else if (prop == 'target'){
-            //parseing name of composition
-            schema['composition'] = asset[prop];     
+        //parseing name of composition
+        schema['composition'] = asset[prop];
     }
     else if (prop == 'totalcomp'){
-            //parse maxNumber of compositions to render video
-            reqObj['init']['totalcomp'] = asset[prop];     
+        //parse maxNumber of compositions to render video
+        reqObj['init']['totalcomp'] = asset[prop];
     }
     else if (prop == 'output'){
-            //parse output_name of scene
-            schema['uid'] = asset[prop];
-            //scripts key
-            scriptSch['scriptName'] = asset[prop];
+        //parse output_name of scene
+        schema['uid'] = asset[prop];
+        //scripts key
+        scriptSch['scriptName'] = asset[prop];
     }
 
     //Asset parsing
     else if (prop.indexOf('bg_image')!= -1 ){
-            schema['assets'].push({'name': prop , 'src': asset[prop] });
+        schema['assets'].push({'name': prop , 'src': asset[prop] });
     }
     else if (prop.indexOf('duration')!= -1 ){
-            schema['assets'].push({'name': prop , 'src': asset[prop] });
+        schema['assets'].push({'name': prop , 'src': asset[prop] });
     }
 
     //Expressions parsing
-    else if(prop.indexOf('text')!= -1 ){        
-            scriptSch[prop] = asset[prop];
+    else if(prop.indexOf('text')!= -1 ){
+        scriptSch[prop] = asset[prop];
     }
-    else if(prop.indexOf('color')!= -1 ){        
-            scriptSch[prop] = asset[prop];
+    else if(prop.indexOf('color')!= -1 ){
+        scriptSch[prop] = asset[prop];
     }
-    else if(prop.indexOf('background_color')!= -1 ){        
-            scriptSch[prop] = asset[prop];
+    else if(prop.indexOf('background_color')!= -1 ){
+        scriptSch[prop] = asset[prop];
     }
 
 }
 
 /*
 FIX VALUES:
-
     aep: 'C:\\prj\\AeTemplate\\Dynamic\\Simple_Promo\\Fade_Up\\02',
     target: 'Final Comp',
     id: 176113,
     'render-status': 'ready',
     totalcomp: 18,
     output: 'betareevio_4857_176113_1',
-
 {
     uid: 'jedinstveni',
     template: 'template1.aepx',
@@ -169,5 +167,4 @@ FIX VALUES:
         }
     ]
 }
-
 */

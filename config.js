@@ -1,4 +1,8 @@
 let config = {
+    server:{
+        ip: 'http://192.168.0.16',
+        port: ':3000',
+    },
     //reference to C:\\
     pathTo_C:{
         path:"../",
@@ -17,7 +21,8 @@ let config = {
     },
     renderingProcesses:{
         count: 2,
-        startingPort: 6060
+        startingPort: 6060,
+        renderLoopRepeat: 2000, // miliseconds
     }
 };
 

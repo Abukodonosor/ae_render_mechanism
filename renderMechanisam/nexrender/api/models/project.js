@@ -44,7 +44,9 @@ class Project {
             settings:       this.settings,
             composition:    this.composition,
             actions:        this.actions,
-            errorMessage:   this.errorMessage
+            errorMessage:   this.errorMessage,
+            full_object:    this.full_object,
+            attempts:       this.attempts,
         };
     }
 
@@ -64,6 +66,10 @@ class Project {
         this.actions        = data.actions      || [];
         this.settings       = data.settings     || { outputModule: AE_OUTPUT_MODULE, outputExt: AE_OUTPUT_EXT };
         this.errorMessage   = data.errorMessage || null;
+
+        this.full_object = data.full_object || {};
+        this.attempts = 0;
+
 
         return this;
     }
