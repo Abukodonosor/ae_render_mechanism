@@ -1,19 +1,22 @@
 let config = {
     //reference to C:\\
     pathTo_C:{
-        path:"\\..",
+        path:"../",
     },
-
     pathForScriptsAepx:{
-        path: this.pathTo_C+"\\",
+        path: ""
     },
-
     clip_storage:{
-        path: this.pathTo_C+"\\reevio_results",
+        path: "../../../reevio_results",
     },
-
     result:{
         path:"",
+    },
+    aerender:{
+        path: "",
+    },
+    renderingProcesess:{
+        num:1,
     }
 };
 
