@@ -1,5 +1,10 @@
 'use strict';
 
+let config = require('../config');
+
+let ip = config.server.ip;
+let port = config.server.port;
+
 let object = {
     init: {},
     scenes: [],
@@ -51,8 +56,6 @@ function parseScene(data,reqObj){
     let assets = data;
     // assets = JSON.parse(assets);
 
-    // console.log(assets[0])
-
     //loop true the scenes (Content)
     for(let asset of assets){
         // clone object
@@ -64,7 +67,6 @@ function parseScene(data,reqObj){
         for(let prop in asset){
             // console.log(prop)
             assetProp(prop,asset,reqObj,schema,scriptSch);
-
         }
         reqObj['scenes'].push(schema);
         reqObj['scripts'].push(scriptSch);
@@ -83,7 +85,8 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
         schema['template'] = project_name;
 
         //ading project assets path
-        schema['assets'].push({'type': "project",'name': project_name , 'src': asset[prop] });
+        let templatePath = format_server_download_path(asset[prop],'.aepx');
+        schema['assets'].push({'type': "project",'name': project_name , 'src': templatePath });
     }
     else if (prop == 'target'){
         //parseing name of composition
@@ -102,9 +105,11 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
 
     //Asset parsing
     else if (prop.indexOf('bg_image')!= -1 ){
+        let templatePath = format_server_download_path(asset[prop],'.jpg');
         schema['assets'].push({'name': prop , 'src': asset[prop] });
     }
     else if (prop.indexOf('duration')!= -1 ){
+        let templatePath = format_server_download_path(asset[prop],'.mp3');
         schema['assets'].push({'name': prop , 'src': asset[prop] });
     }
 
@@ -118,53 +123,12 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
     else if(prop.indexOf('background_color')!= -1 ){
         scriptSch[prop] = asset[prop];
     }
-
 }
 
-/*
-FIX VALUES:
-    aep: 'C:\\prj\\AeTemplate\\Dynamic\\Simple_Promo\\Fade_Up\\02',
-    target: 'Final Comp',
-    id: 176113,
-    'render-status': 'ready',
-    totalcomp: 18,
-    output: 'betareevio_4857_176113_1',
-{
-    uid: 'jedinstveni',
-    template: 'template1.aepx',
-    composition: 'composition1',
-    settings: {
-        outputModule: 'h264',
-        outputExt: 'mp4',
-        startFrame: 0,
-        endFrame: 542
-    },
-    assets: [
-        {
-            type: 'project',
-            src: 'http://example.com/projects/proj1.aepx',
-            name: 'template1.aepx'
-        }, {
-            type: 'image',
-            src: 'http://example.com/images/image1.jpg',
-            name: 'tumb1.jpg'
-        }, {
-            type: 'image',
-            src: 'http://example.com/images/image2.jpg',
-            name: 'background.jpg',
-            filters: [{
-                name: 'cover',
-                params: [1920, 1080]
-            }],
-        }, {
-            type: 'audio',
-            src: 'http://example.com/music/fligh_high.mp3',
-            name: 'track.mp3'
-        }, {
-            type: 'script',
-            src: 'http://example.com/projects/script.js',
-            name: 'script.js'
-        }
-    ]
+/* pathTo for downloading files*/
+function format_server_download_path(path,sufix){
+    let templatePath = path.split("\\\\").slice(1).join("/");
+    templatePath.indexOf(sufix) == -1 ?templatePath += sufix: templatePath;
+
+    return ip+":___"+"/"+config.pathTo_C.path+templatePath;
 }
-*/

@@ -15,26 +15,24 @@ let AvailablePorts = [];
 
     AvailablePorts = await RenderingProces.availablePorts();
 
-    console.log(AvailablePorts)
-
-    while(true){
-        let now = Date.now();
-        let dt = ( now - last );
-        summ += dt;
-
-        if( summ > renderLoopRepeat ){
-            console.log(summ);
+    setInterval(async()=>{
+        // if( summ > renderLoopRepeat ){
+            console.log( AvailablePorts, summ);
             summ = 0;
 
-            console.log(await RenderingProces.peekScene())
+            if(AvailablePorts.length !=0 && await RenderingProces.peekScene()){
+                console.log("MOZEEE");
 
-            // if(AvailablePorts.length !=0 && await RenderingProces.peekScene()){
-            //     console.log("MOZEEE");
-            // }
+                //take port for
+                let port = AvailablePorts.pop();
+                let project = await RenderingProces.getScene();
 
-        }
-        last = now;
-    }
+                //aerender instance
+                RenderingProces.renderNode(port,project,(port) => {
+                    AvailablePorts.push(port);
+                });
+             }
+    },renderLoopRepeat);
 
 
 }());

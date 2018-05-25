@@ -34,13 +34,13 @@ router.post('/', function(req, res, next) {
     //insert scene in dbLow
     for(let scena of parsedRespons.scenes){
         //scene object
-        let renderObj = new Project(scena);
-        renderObj.full_object = parsedRespons.init;
-        renderObj.attempts = 0;
+        // let renderObj = new Project(scena);
+        // renderObj.full_object = parsedRespons.init;
+        // renderObj.attempts = 0;
 
         //add to quee Project render object
         db.get('scenes')
-        .push(renderObj)
+        .push(scena)
         .write();
     }
 
@@ -88,7 +88,7 @@ router.post('/getNextScene', function(req, res, next) {
 router.get('/aerenderProcesses', function(req, res, next) {
 
     let resultArray = [];
-
+    // res.header("Content-Type", "application/javascript");
     //init ports
     let numberOfProcesses = config.renderingProcesses.count;
     let startingPort = config.renderingProcesses.startingPort;
@@ -97,8 +97,7 @@ router.get('/aerenderProcesses', function(req, res, next) {
         resultArray.push((startingPort+i)+1);
     }
 
-    res.send(resultArray)
-    // res.send(scene);
+    res.json({port: resultArray});
 });
 
 

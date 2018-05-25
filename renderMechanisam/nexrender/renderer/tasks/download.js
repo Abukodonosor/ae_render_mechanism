@@ -49,7 +49,6 @@ module.exports = function(project) {
                 project.template = asset.name;
             }
         }
-
         // iterate over each asset and download it (copy it)
         Promise.all(project.assets.map((asset) => {
             if (asset.type === 's3') {

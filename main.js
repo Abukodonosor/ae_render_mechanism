@@ -14,4 +14,4 @@ let podatak = parseRequest.parse_request(data);
 
 
 console.log("==============");
-console.log(podatak);
+console.log(podatak['scenes'][0]);

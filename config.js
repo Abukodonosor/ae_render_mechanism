@@ -20,9 +20,10 @@ let config = {
         path: "",
     },
     renderingProcesses:{
+        aebinary: 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2018\\Support Files\\aerender.exe',
         count: 2,
         startingPort: 6060,
-        renderLoopRepeat: 2000, // miliseconds
+        renderLoopRepeat: 10000, // miliseconds
     }
 };
 
