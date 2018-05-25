@@ -62,6 +62,24 @@ router.post('/getNextScene', function(req, res, next) {
     // res.send(scene);
 });
 
+router.get('/aerenderProcesses', function(req, res, next) {
+    let param = req.body;
+
+    let resultArray = [];
+
+    //init ports
+    let numberOfProcesses = config.renderingProcesses.count;
+    let startingPort = config.renderingProcesses.startingPort;
+
+    for(let i = 0;i<numberOfProcesses;i++){
+        resultArray.push((startingPort+i)+1);
+    }
+
+    res.send(resultArray)
+    // res.send(scene);
+});
+
+
 
 
 module.exports = router;

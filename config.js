@@ -15,8 +15,9 @@ let config = {
     aerender:{
         path: "",
     },
-    renderingProcesess:{
-        num:1,
+    renderingProcesses:{
+        count: 2,
+        startingPort: 6060
     }
 };
 

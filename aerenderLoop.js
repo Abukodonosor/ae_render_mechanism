@@ -1,5 +1,13 @@
 'use strict';
 
+let request = require('request');
+
+let AvailablePorts = [];
+
+
+request.get('localhost:3000/aerenderProcesses',(err,res,body)=>{
+
+});
 //kontaktiraj rutu za init render procesa
 
 //loop
