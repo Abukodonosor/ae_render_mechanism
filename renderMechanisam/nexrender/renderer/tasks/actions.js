@@ -5,7 +5,7 @@ const path      = require('path');
 const fs        = require('fs-extra');
 const async     = require('async');
 
-const RESULTS_DIR = process.env.RESULTS_DIR || 'results';
+const RESULTS_DIR = process.env.RESULTS_DIR || '../reevio_results/';
 
 /**
  * actions is a backward compability term
@@ -16,7 +16,7 @@ module.exports = function(project) {
     return new Promise((resolve, reject) => {
 
         let src = path.join( project.workpath, project.resultname );
-        let dst = path.join( RESULTS_DIR, project.uid + '_' + project.resultname );
+        let dst = path.join( RESULTS_DIR+project.full_object.OrderId, project.uid + '_' + project.resultname );
 
         // create, if it does not exists
         mkdirp.sync(RESULTS_DIR);

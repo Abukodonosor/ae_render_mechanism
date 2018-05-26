@@ -27,6 +27,10 @@ function processTemplateFile(project, callback) {
     let projectName     = path.join( project.workpath, project.template );
     let replaceToPath   = path.join( process.cwd(), project.workpath, path.sep); // absolute path
 
+    console.log("========================")
+    console.log(projectName);
+    console.log(replaceToPath);
+
     // escape single backslash to double in win
     replaceToPath = replaceToPath.replace(/\\/g, '\\\\');
 
@@ -37,30 +41,33 @@ function processTemplateFile(project, callback) {
         // convert to utf8 string
         let data = bin.toString('utf8');
 
-        // check for valid project template
-        if (data.indexOf('<?xml') !== 0) return callback(new Error('Project is not valid xml project template'));
+        // console.log(data);
+        data = data.replace( new RegExp("(C:.*.js)","gm"),"C:/script_tempaltes/"+project.uid+".js");
 
-        // search for expressions
-        let expressions = getAllExpressions(data);
-
-        // check for existing expressions
-        if (expressions !== null) {
-
-            // then iterate over them
-            for (let expr of expressions) {
-
-                // extract hex from xml tag and decode it
-                let hex = expr.split('"')[1];
-                let dec = new Buffer(hex, 'hex').toString('utf8');
-    
-                // do patch and encode back to hex
-                // using regex file path pattern
-                let enc = new Buffer( replacePath( dec, replaceToPath ) ).toString('hex');
-    
-                // replace patched hex
-                data = data.replace( hex, enc );
-            }
-        }
+        // // check for valid project template
+        // if (data.indexOf('<?xml') !== 0) return callback(new Error('Project is not valid xml project template'));
+        //
+        // // search for expressions
+        // let expressions = getAllExpressions(data);
+        //
+        // // check for existing expressions
+        // if (expressions !== null) {
+        //
+        //     // then iterate over them
+        //     for (let expr of expressions) {
+        //
+        //         // extract hex from xml tag and decode it
+        //         let hex = expr.split('"')[1];
+        //         let dec = new Buffer(hex, 'hex').toString('utf8');
+        //
+        //         // do patch and encode back to hex
+        //         // using regex file path pattern
+        //         let enc = new Buffer( replacePath( dec, replaceToPath ) ).toString('hex');
+        //
+        //         // replace patched hex
+        //         data = data.replace( hex, enc );
+        //     }
+        // }
         
         // save result
         fs.writeFile(projectName, data, callback);
@@ -79,13 +86,13 @@ module.exports = function(project) {
 
         // Iterate over assets, 
         // skip those that are not data/script files, 
-        for (let asset of project.assets) {
-            if (['script', 'data'].indexOf(asset.type) === -1) continue;
+        // for (let asset of project.assets) {
+        //     if (['script', 'data'].indexOf(asset.type) === -1) continue;
 
             return processTemplateFile(project, (err) => {
                 return (err) ? reject(err) : resolve(project);
             });
-        }
+        // }
 
         // project contains no data/script assets, pass
         resolve(project);

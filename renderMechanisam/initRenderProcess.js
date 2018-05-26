@@ -85,13 +85,11 @@ module.exports = {
 
             console.log('Started local static server at port:', port);
 
-            let project1 = new Project(JSON.parse(project));
-            project1.full_object = JSON.parse(project).init;
-            project1.attempts = 0;
-            changePort(project1.assets,port);
+            let obj = JSON.parse(project);
+            let project1 = new Project(obj);
 
             console.log(project1);
-
+            changePort(project1.assets,port);
             // start rendering
             renderer.render(aebinary, project1).then(() => {
                 // success

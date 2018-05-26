@@ -1,6 +1,7 @@
 'use strict';
 
 let config = require('../config');
+let hexRgb = require('hex-rgb');
 
 let ip = config.server.ip;
 let port = config.server.port;
@@ -118,10 +119,14 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
         scriptSch[prop] = asset[prop];
     }
     else if(prop.indexOf('color')!= -1 ){
-        scriptSch[prop] = asset[prop];
+        let color = hexRgb("#"+asset[prop], {format: 'array'});
+        color[3]= 1;
+        scriptSch[prop] = color;
     }
     else if(prop.indexOf('background_color')!= -1 ){
-        scriptSch[prop] = asset[prop];
+        let color = hexRgb("#"+asset[prop], {format: 'array'});
+        color[3]= 1;
+        scriptSch[prop] = color;
     }
 }
 

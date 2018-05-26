@@ -9,15 +9,17 @@ const db = low(adapter);
 
 //lib for request parse
 let parseReq = require('../../renderMechanisam/parseRequest');
+//lib for write ExpressionScript files
+let expressionsJS = require('../../renderMechanisam/extensionsScriptMaker');
 
 //Rendering project
 let Nexrender = require('../../renderMechanisam/nexrender/index');
-let Project = Nexrender.Project;
 
 
 //config files
 let config = require('../../config');
-let dir = config.clip_storage.path;
+let expressionsDIR = config.pathForScriptsExpressions.path;
+let clip_storage = config.clip_storage.path;
 
 // request from Reevio
 router.post('/', function(req, res, next) {
@@ -28,27 +30,29 @@ router.post('/', function(req, res, next) {
     //init db if donsenot exist
     db.defaults({ scenes: [] })
         .write();
-    //write scripts in his place
-
 
     //insert scene in dbLow
     for(let scena of parsedRespons.scenes){
-        //scene object
-        // let renderObj = new Project(scena);
-        // renderObj.full_object = parsedRespons.init;
-        // renderObj.attempts = 0;
-
+        scena.full_object = parsedRespons.init;
+        scena.attempts = 0;
         //add to quee Project render object
         db.get('scenes')
         .push(scena)
         .write();
     }
 
-    //make folder where we will transfer our scene_videos
-    if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
-        if (!fs.existsSync(dir+"/"+parsedRespons['init'].OrderId)){
-            fs.mkdirSync(dir+"/"+parsedRespons['init'].OrderId);
+    //creating expressions script folder
+    if (!fs.existsSync(expressionsDIR)){
+        fs.mkdirSync(expressionsDIR);
+    }
+    //write scripts in his place
+    expressionsJS.writeScriptFiles(parsedRespons.scripts);
+
+    //make folder where we will transfer our scene_videos (result folder)
+    if (!fs.existsSync(clip_storage)){
+        fs.mkdirSync(clip_storage);
+        if (!fs.existsSync(clip_storage+"/"+parsedRespons['init'].OrderId)){
+            fs.mkdirSync(clip_storage+"/"+parsedRespons['init'].OrderId);
         }
     }
 
@@ -65,7 +69,7 @@ router.post('/peekNextScene', function(req, res, next) {
         last: function(array) {
             return array[array.length-1];
         }
-    })
+    });
     //peek in last scene
     let scene= db.get('scenes')
         .last()

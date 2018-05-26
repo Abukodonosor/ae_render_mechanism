@@ -1,14 +1,14 @@
 let config = {
     server:{
-        ip: 'http://192.168.0.16',
+        ip: 'http://192.168.1.102',
         port: ':3000',
     },
     //reference to C:\\
     pathTo_C:{
         path:"../",
     },
-    pathForScriptsAepx:{
-        path: ""
+    pathForScriptsExpressions:{
+        path: "../../../script_tempaltes", // ../../../ => path to C:\
     },
     clip_storage:{
         path: "../../../reevio_results",
@@ -16,12 +16,9 @@ let config = {
     result:{
         path:"",
     },
-    aerender:{
-        path: "",
-    },
     renderingProcesses:{
         aebinary: 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2018\\Support Files\\aerender.exe',
-        count: 2,
+        count: 1,
         startingPort: 6060,
         renderLoopRepeat: 10000, // miliseconds
     }
