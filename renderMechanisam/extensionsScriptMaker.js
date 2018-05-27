@@ -5,7 +5,7 @@ let config = require('../config');
 
 let scriptPath = config.pathForScriptsExpressions.path;
 
-let scriptInit = "let data = {};";
+let scriptInit = "var data = {};";
 
 module.exports = {
 
@@ -20,7 +20,7 @@ module.exports = {
                     scriptName =script[prop]+".js";
                     scriptContent = scriptInit;
                 }else{
-                    scriptContent += `data['${prop}'] = '${script[prop]}';`;
+                    scriptContent += "data['" + prop +  "'] = ["+script[prop] +"];";
                 }
 
             }

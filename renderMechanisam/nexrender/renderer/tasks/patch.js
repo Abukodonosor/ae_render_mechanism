@@ -3,6 +3,9 @@
 const path      = require('path');
 const fs        = require('fs-extra');
 const async     = require('async');
+let config = require('../../../../config');
+let scriptFolder = config.pathForScriptsExpressions.folder_init;
+
 
 function getAllExpressions(data) {
     return data.match(/\<expr bdata=\"([a-f0-9]+)\"\s*\/\>/gi);
@@ -42,7 +45,7 @@ function processTemplateFile(project, callback) {
         let data = bin.toString('utf8');
 
         // console.log(data);
-        data = data.replace( new RegExp("(C:.*.js)","gm"),"C:/script_tempaltes/"+project.uid+".js");
+        data = data.replace( new RegExp("(C:.*.js)","gm"),scriptFolder+"/" + project.uid + ".js");
 
         // // check for valid project template
         // if (data.indexOf('<?xml') !== 0) return callback(new Error('Project is not valid xml project template'));
@@ -53,7 +56,7 @@ function processTemplateFile(project, callback) {
         // // check for existing expressions
         // if (expressions !== null) {
         //
-        //     // then iterate over them
+        //     // then iterate over them\
         //     for (let expr of expressions) {
         //
         //         // extract hex from xml tag and decode it

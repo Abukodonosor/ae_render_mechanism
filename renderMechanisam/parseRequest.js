@@ -116,7 +116,7 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
 
     //Expressions parsing
     else if(prop.indexOf('text')!= -1 ){
-        scriptSch[prop] = asset[prop];
+        scriptSch[prop] = "'"+asset[prop]+"'";
     }
     else if(prop.indexOf('color')!= -1 ){
         let color = hexRgb("#"+asset[prop], {format: 'array'});

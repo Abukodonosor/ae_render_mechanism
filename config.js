@@ -9,6 +9,7 @@ let config = {
     },
     pathForScriptsExpressions:{
         path: "../../../script_tempaltes", // ../../../ => path to C:\
+        folder_init: "C:/script_tempaltes"
     },
     clip_storage:{
         path: "../../../reevio_results",
