@@ -7,14 +7,14 @@ const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
 const db = low(adapter);
 
-//lib for request parse
+// request parse
 let parseReq = require('../../renderMechanisam/parseRequest');
-//lib for write ExpressionScript files
+// write ExpressionScript files
 let expressionsJS = require('../../renderMechanisam/extensionsScriptMaker');
-
+//ffmpeg merge
+let ffmpeg = require('../../renderMechanisam/ffmpeg');
 //Rendering project
 let Nexrender = require('../../renderMechanisam/nexrender/index');
-
 
 //config files
 let config = require('../../config');
@@ -61,6 +61,8 @@ router.post('/', function(req, res, next) {
         .push(parsedRespons.init)
         .write();
 
+    //download assets for ffmpeg
+
 
     //write
     res.send(parsedRespons);
@@ -86,7 +88,6 @@ router.post('/peekNextScene', function(req, res, next) {
 
 //Next scene for rendering
 router.post('/getNextScene', function(req, res, next) {
-
     //get scene data and send to render
     let scene = db.get('scenes')
         .pop()
@@ -95,10 +96,10 @@ router.post('/getNextScene', function(req, res, next) {
     res.send(scene);
 });
 
+//creating port values for processes
 router.get('/aerenderProcesses', function(req, res, next) {
 
     let resultArray = [];
-    // res.header("Content-Type", "application/javascript");
     //init ports
     let numberOfProcesses = config.renderingProcesses.count;
     let startingPort = config.renderingProcesses.startingPort;
@@ -113,23 +114,33 @@ router.get('/aerenderProcesses', function(req, res, next) {
 router.post('/mergeVideoControll', function(req, res, next) {
 
     let status = req.body.status;
-    let obj = req.body.obj;
+    let obj = JSON.parse(req.body.obj);
 
     console.log(status,obj);
 
+    let videoStatus = db.get('sceneMergeControl')
+        .find({ OrderId: obj.OrderId })
+        .write();
+
     if( status == "done"){
-        //-1 na sceneMergeControl ako postji taj video
-        // ako je totalCompf == 0 , pokreni merge proces
-        //kada se merge zavrsi javi na reeevio
+        videoStatus.totalcomp -- ;
+        if(videoStatus.totalcomp == 0 ){
+            db.get('sceneMergeControl').remove({OrderId:obj.OrderId}).write();
+            //start merge process
+            ffmpeg.runFFmpeg(videoStatus);
+        }else{
+            db.get('endRender').find( obj.OrderId).write(videoStatus)
+        }
     }
     else if (status == "broken"){
-        // ukloni ga sa sceneMergeControl
+        //delete item from mergeControl
+        db.get('sceneMergeControl').remove({OrderId:obj.OrderId}).write();
         //*** ukloni sve scene vezane za njega u scenes
         //*** ili izmapiraj da samo renderuje one koji mu fale ... kada opet posalje reevio
         //javi na reevio
     }
 
-    res.send({final: "Penal"})
+    res.send({kraj:"done"});
 
 });
 

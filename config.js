@@ -1,6 +1,6 @@
 let config = {
     server:{
-        ip: 'http://192.168.1.102',
+        ip: 'http://192.168.0.16',
         port: ':3000',
     },
     //reference to C:\\
@@ -14,8 +14,10 @@ let config = {
     clip_storage:{
         path: "../../../reevio_results", // ,,/../../ => path to C:\
     },
-    result:{
-        path:"",
+    ffmpeg:{
+        path: "C:\\rend_mecha\\ffmpeg\\\\bin\\ffmpeg",
+        resultClips: "..\\..\\..\\reevio_results",
+        unlink: "C:\\reevio_results"
     },
     renderingProcesses:{
         aebinary: 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2018\\Support Files\\aerender.exe',

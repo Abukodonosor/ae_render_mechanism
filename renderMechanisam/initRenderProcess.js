@@ -88,14 +88,13 @@ module.exports = {
             let obj = JSON.parse(project);
             let project1 = new Project(obj);
 
-            console.log(project1);
             changePort(project1.assets,port);
             // start rendering
             renderer.render(aebinary, project1).then(() => {
                 // success
                 request.post({
                     url: config.server.ip+config.server.port+'/renderServer/mergeVideoControll',
-                    form: {status: "done", obj:  project }
+                    form: {status: "done", obj:  JSON.stringify(project1.full_object) }
                 },function(err,res,body){
                     console.log('rendering finished');
                     server.close();
@@ -106,7 +105,7 @@ module.exports = {
                 // error
                 request.post({
                     url: config.server.ip+config.server.port+'/renderServer/mergeVideoControll',
-                    form: {status: "broken", obj: project.full_object }
+                    form: {status: "broken", obj: JSON.stringify(project1.full_object) }
                 },function(err,res,body){
                     console.error(err);
                     server.close();
