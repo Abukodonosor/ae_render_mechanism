@@ -12,7 +12,7 @@ let config = {
         folder_init: "C:/script_tempaltes"
     },
     clip_storage:{
-        path: "../../../reevio_results",
+        path: "../../../reevio_results", // ,,/../../ => path to C:\
     },
     result:{
         path:"",

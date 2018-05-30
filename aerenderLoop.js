@@ -13,10 +13,10 @@ let AvailablePorts = [];
 
     AvailablePorts = await RenderingProces.availablePorts();
 
-    setInterval(async()=>{
-            console.log( AvailablePorts);
-
-            if(AvailablePorts.length !=0 && await RenderingProces.peekScene()){
+    // setInterval(async()=>{
+    //         console.log( AvailablePorts);
+    //
+    //         if(AvailablePorts.length !=0 && await RenderingProces.peekScene()){
 
                 //take port for
                 let port = AvailablePorts.pop();
@@ -27,8 +27,8 @@ let AvailablePorts = [];
                 RenderingProces.renderNode(port,project,(port) => {
                     AvailablePorts.push(port);
                 });
-             }
-    },renderLoopRepeat);
+    //          }
+    // },renderLoopRepeat);
 
 
 }());

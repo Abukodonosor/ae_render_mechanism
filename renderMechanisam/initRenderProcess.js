@@ -93,16 +93,26 @@ module.exports = {
             // start rendering
             renderer.render(aebinary, project1).then(() => {
                 // success
-                server.close();
-                console.log('rendering finished');
-                callback(port);
-                return false;
+                request.post({
+                    url: config.server.ip+config.server.port+'/renderServer/mergeVideoControll',
+                    form: {status: "done", obj:  project }
+                },function(err,res,body){
+                    console.log('rendering finished');
+                    server.close();
+                    callback(port);
+                    // return false;
+                });
             }).catch((err) => {
                 // error
-                console.error(err);
-                server.close();
-                callback(port);
-                return false;
+                request.post({
+                    url: config.server.ip+config.server.port+'/renderServer/mergeVideoControll',
+                    form: {status: "broken", obj: project.full_object }
+                },function(err,res,body){
+                    console.error(err);
+                    server.close();
+                    callback(port);
+                    // return false;
+                });
             });
         });
     }

@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
     let parsedRespons = parseReq.parse_request(param);
 
     //init db if donsenot exist
-    db.defaults({ scenes: [] })
+    db.defaults({ scenes: [], sceneMergeControl: [] })
         .write();
 
     //insert scene in dbLow
@@ -55,6 +55,12 @@ router.post('/', function(req, res, next) {
             fs.mkdirSync(clip_storage+"/"+parsedRespons['init'].OrderId);
         }
     }
+
+    //we need to insert clip options to merge controll
+    db.get('sceneMergeControl')
+        .push(parsedRespons.init)
+        .write();
+
 
     //write
     res.send(parsedRespons);
@@ -103,6 +109,30 @@ router.get('/aerenderProcesses', function(req, res, next) {
 
     res.json({port: resultArray});
 });
+
+router.post('/mergeVideoControll', function(req, res, next) {
+
+    let status = req.body.status;
+    let obj = req.body.obj;
+
+    console.log(status,obj);
+
+    if( status == "done"){
+        //-1 na sceneMergeControl ako postji taj video
+        // ako je totalCompf == 0 , pokreni merge proces
+        //kada se merge zavrsi javi na reeevio
+    }
+    else if (status == "broken"){
+        // ukloni ga sa sceneMergeControl
+        //*** ukloni sve scene vezane za njega u scenes
+        //*** ili izmapiraj da samo renderuje one koji mu fale ... kada opet posalje reevio
+        //javi na reevio
+    }
+
+    res.send({final: "Penal"})
+
+});
+
 
 
 
