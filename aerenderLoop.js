@@ -12,8 +12,16 @@ let AvailablePorts = [];
 (async function(){
 
     AvailablePorts = await RenderingProces.availablePorts();
-
-
+    //
+    // request.post({
+    //     url: config.server.ip+config.server.port+'/renderServer/mergeVideoControll',
+    //     form: {status: "done", obj:  JSON.stringify({OrderId:178621}) }
+    // },function(err,res,body){
+    //     console.log('rendering finished');
+    //     // server.close();
+    //     // callback(port);
+    //     // return false;
+    // });
     setInterval(async()=>{
             console.log( AvailablePorts);
 

@@ -1,7 +1,6 @@
 'use strict';
 
 let request = require('request');
-
 let config = require('../config');
 
 let ip = config.server.ip;
@@ -116,9 +115,7 @@ module.exports = {
         });
     }
 
-
 };
-
 
 function changePort(list,port){
     for(let obj of list){

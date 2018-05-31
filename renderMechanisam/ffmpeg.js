@@ -3,6 +3,8 @@
 let config = require('../config');
 let spawn = require('child_process').spawn;
 var fs = require('fs');
+var request = require('request');
+
 let ffmpeg = config.ffmpeg.path;
 
 let pathToResult = config.ffmpeg.resultClips;
@@ -19,6 +21,11 @@ module.exports = {
         let soundFile = realPath + "sound.mp3";
         let resultName = realPath + obj.fileName+".mp4";
 
+        //deleting final video
+        if(fs.existsSync(unlink)){
+            fs.unlinkSync(unlink);
+        }
+
         var args = [
             "-f","concat",
             "-safe","0",
@@ -27,10 +34,6 @@ module.exports = {
             "-c:a", "copy", "-shortest", resultName
         ];
 
-        //deleting final video
-        if(fs.existsSync(unlink)){
-            fs.unlinkSync(unlink);
-        }
 
         var proc = spawn(ffmpeg, args);
 
@@ -48,11 +51,53 @@ module.exports = {
 
     },
 
-    downloadAssetsForFFmpeg:() => {
+    wirteFFmpegMergeFile:(obj,orderID) => {
 
+        let schema = "file 'C:\\reevio_results\\"+ orderID +"\\";
+        let content = "";
+        for(let o of obj){
+            content += schema + o.uid +"_result.mov'\n";
+        }
+        fs.writeFileSync(config.ffmpeg.pathForMergeFile+"/"+orderID+"/mergeFiles.txt", content);
     },
 
+    downloadAssetsForFFmpeg:(obj,pathForDownloading) => {
+        // list of ffmpeg assets which need to be downloaded
+        let arrayOfFFmpegAssetsForDownload = [
+            { key: "audioUrl", value: "", extensions: ['.mp3', '.wmw'], name:"sound" },
+            { key: "watermark", value: "" , extensions: ['.png'], name:"watermark" },
+        ];
+
+        for(let elem of arrayOfFFmpegAssetsForDownload){
+            if(obj[elem.key] != ''){
+                let itemUrl = obj[elem.key];
+                let extension = findRightExtension(itemUrl,elem.extensions);
+                download( itemUrl, extension, elem.name, pathForDownloading);
+            }
+        }
+    }
+
 };
+
+// download item and save to his folder
+function download(itemUrlextension, extension, name, pathForDownloading){
+    request
+        .get(itemUrlextension)
+        .on('error', function(err) {
+            // handle error
+        })
+        .pipe(fs.createWriteStream(pathForDownloading+name+extension));
+}
+
+//find right extension
+function findRightExtension( string, extensions){
+        for(let ex of extensions){
+            if(string.indexOf(ex) != -1)
+                return ex;
+        }
+}
+
+
 
 /*
 

@@ -3,7 +3,6 @@ let config = {
         ip: 'http://192.168.0.16',
         port: ':3000',
     },
-    //reference to C:\\
     pathTo_C:{
         path:"../",
     },
@@ -17,7 +16,8 @@ let config = {
     ffmpeg:{
         path: "C:\\rend_mecha\\ffmpeg\\\\bin\\ffmpeg",
         resultClips: "..\\..\\..\\reevio_results",
-        unlink: "C:\\reevio_results"
+        unlink: "C:\\reevio_results",
+        pathForMergeFile: "../../../reevio_results"
     },
     renderingProcesses:{
         aebinary: 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2018\\Support Files\\aerender.exe',

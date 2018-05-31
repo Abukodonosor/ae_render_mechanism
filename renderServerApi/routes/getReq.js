@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var fs = require('fs');
 
+//dataBase
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
@@ -9,11 +10,8 @@ const db = low(adapter);
 
 // request parse
 let parseReq = require('../../renderMechanisam/parseRequest');
-// write ExpressionScript files
 let expressionsJS = require('../../renderMechanisam/extensionsScriptMaker');
-//ffmpeg merge
 let ffmpeg = require('../../renderMechanisam/ffmpeg');
-//Rendering project
 let Nexrender = require('../../renderMechanisam/nexrender/index');
 
 //config files
@@ -23,13 +21,22 @@ let clip_storage = config.clip_storage.path;
 
 // request from Reevio
 router.post('/', function(req, res, next) {
+
     let param = req.body;
-
     let parsedRespons = parseReq.parse_request(param);
-
     //init db if donsenot exist
     db.defaults({ scenes: [], sceneMergeControl: [] })
         .write();
+
+    //make folder to store results
+    if (!fs.existsSync(clip_storage)){
+        fs.mkdirSync(clip_storage);
+    }
+    //make folder with name of order
+    if (!fs.existsSync(clip_storage+"/"+parsedRespons['init'].OrderId)){
+        fs.mkdirSync(clip_storage+"/"+parsedRespons['init'].OrderId);
+    }
+
 
     //insert scene in dbLow
     for(let scena of parsedRespons.scenes){
@@ -40,33 +47,26 @@ router.post('/', function(req, res, next) {
         .push(scena)
         .write();
     }
-
     //creating expressions script folder
     if (!fs.existsSync(expressionsDIR)){
         fs.mkdirSync(expressionsDIR);
     }
+
     //write scripts in his place
     expressionsJS.writeScriptFiles(parsedRespons.scripts);
+    //write ffmpeg merge file
+    ffmpeg.wirteFFmpegMergeFile(parsedRespons.scenes, parsedRespons['init'].OrderId);
+    let downloadAssets = config.ffmpeg.resultClips+"\\"+parsedRespons.init.OrderId+"\\";
+    ffmpeg.downloadAssetsForFFmpeg(parsedRespons.init,downloadAssets);
 
-    //make folder where we will transfer our scene_videos (result folder)
-    if (!fs.existsSync(clip_storage)){
-        fs.mkdirSync(clip_storage);
-        if (!fs.existsSync(clip_storage+"/"+parsedRespons['init'].OrderId)){
-            fs.mkdirSync(clip_storage+"/"+parsedRespons['init'].OrderId);
-        }
-    }
 
-    //we need to insert clip options to merge controll
+    //insert clip to merge controll
     db.get('sceneMergeControl')
         .push(parsedRespons.init)
         .write();
 
-    //download assets for ffmpeg
-
-
-    //write
+    //answer
     res.send(parsedRespons);
-
 });
 
 //Peek for next scene
