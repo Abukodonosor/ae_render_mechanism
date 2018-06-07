@@ -1,5 +1,6 @@
 'use strict';
 
+var cron = require('node-cron');
 let request = require('request');
 let config = require('./config')
 
@@ -12,32 +13,33 @@ let AvailablePorts = [];
 (async function(){
 
     AvailablePorts = await RenderingProces.availablePorts();
-    //
-    // request.post({
-    //     url: config.server.ip+config.server.port+'/renderServer/mergeVideoControll',
-    //     form: {status: "done", obj:  JSON.stringify({OrderId:178621}) }
-    // },function(err,res,body){
-    //     console.log('rendering finished');
-    //     // server.close();
-    //     // callback(port);
-    //     // return false;
-    // });
-    setInterval(async()=>{
-            console.log( AvailablePorts);
 
-            if(AvailablePorts.length !=0 && await RenderingProces.peekScene()){
-
+    cron.schedule(`*/${renderLoopRepeat} * * * * *`, function(){
+        (async()=> {
+            console.log(AvailablePorts);
+            if (AvailablePorts.length != 0 && await RenderingProces.peekScene()) {
                 //take port for
                 let port = AvailablePorts.pop();
                 let project = await RenderingProces.getScene();
 
-                console.log("rendering Start port: ",port);
+                console.log("rendering Start port: ", port);
                 //aerender instance
-                RenderingProces.renderNode(port,project,(port) => {
+                RenderingProces.renderNode(port, project, (port) => {
                     AvailablePorts.push(port);
                 });
-             }
-    },renderLoopRepeat);
-
+            }
+        })();
+    });
 
 }());
+
+
+// request.post({
+//     url: config.server.ip+config.server.port+'/renderServer/mergeVideoControll',
+//     form: {status: "done", obj:  JSON.stringify({OrderId:178621}) }
+// },function(err,res,body){
+//     console.log('rendering finished');
+//     // server.close();
+//     // callback(port);
+//     // return false;
+// });

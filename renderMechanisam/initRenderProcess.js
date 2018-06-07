@@ -88,6 +88,7 @@ module.exports = {
             let project1 = new Project(obj);
 
             changePort(project1.assets,port);
+            console.log(project1.assets);
             // start rendering
             renderer.render(aebinary, project1).then(() => {
                 // success

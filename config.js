@@ -1,3 +1,6 @@
+let pathFromApiToC= "../../..";
+let pathFromApiWinToC = "..\\..\\..";
+
 let config = {
     server:{
         ip: 'http://192.168.0.16',
@@ -7,23 +10,23 @@ let config = {
         path:"../",
     },
     pathForScriptsExpressions:{
-        path: "../../../script_tempaltes", // ../../../ => path to C:\
+        path: pathFromApiToC+"/script_tempaltes", // ../../../ => path to C:\
         folder_init: "C:/script_tempaltes"
     },
     clip_storage:{
-        path: "../../../reevio_results", // ,,/../../ => path to C:\
+        path: pathFromApiToC+"/reevio_results", // ,,/../../ => path to C:\
     },
     ffmpeg:{
         path: "C:\\rend_mecha\\ffmpeg\\\\bin\\ffmpeg",
-        resultClips: "..\\..\\..\\reevio_results",
+        resultClips: pathFromApiWinToC+"\\reevio_results",
         unlink: "C:\\reevio_results",
-        pathForMergeFile: "../../../reevio_results"
+        pathForMergeFile: pathFromApiToC+"/reevio_results"
     },
     renderingProcesses:{
-        aebinary: 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2018\\Support Files\\aerender.exe',
-        count: 1,
+        aebinary: 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2018\\Support Files\\aerender.exe', //path to aerender
+        count: 2,
         startingPort: 6060,
-        renderLoopRepeat: 10000, // miliseconds
+        renderLoopRepeat: 20, // seconds
     }
 };
 

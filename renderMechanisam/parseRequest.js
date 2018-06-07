@@ -82,7 +82,7 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
     if (prop == 'aep'){
         //name of .apex
         let project_name = asset[prop].split("\\").pop();
-        project_name.indexOf(".aepx") == -1 ?project_name += '.aepx': project_name;
+        project_name = project_name.split(".")[0] +'.aepx';
         schema['template'] = project_name;
 
         //ading project assets path
@@ -133,6 +133,15 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
 /* pathTo for downloading files*/
 function format_server_download_path(path,sufix){
     let templatePath = path.split("\\\\").slice(1).join("/");
+
+    if(sufix == '.aepx'){
+        let array = templatePath.split("/");
+        let project_name = array.pop();
+        project_name = project_name.split(".")[0] +'.aepx';
+        array.push(project_name);
+        templatePath = array.join("/");
+    }
+
     templatePath.indexOf(sufix) == -1 ?templatePath += sufix: templatePath;
 
     return ip+":___"+"/"+config.pathTo_C.path+templatePath;

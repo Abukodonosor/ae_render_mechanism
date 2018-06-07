@@ -26,7 +26,7 @@ router.post('/', function(req, res, next) {
     let parsedRespons = parseReq.parse_request(param);
     //init db if donsenot exist
     db.defaults({ scenes: [], sceneMergeControl: [] })
-        .write();
+    .write();
 
     //make folder to store results
     if (!fs.existsSync(clip_storage)){
@@ -37,7 +37,6 @@ router.post('/', function(req, res, next) {
         fs.mkdirSync(clip_storage+"/"+parsedRespons['init'].OrderId);
     }
 
-
     //insert scene in dbLow
     for(let scena of parsedRespons.scenes){
         scena.full_object = parsedRespons.init;
@@ -47,6 +46,7 @@ router.post('/', function(req, res, next) {
         .push(scena)
         .write();
     }
+
     //creating expressions script folder
     if (!fs.existsSync(expressionsDIR)){
         fs.mkdirSync(expressionsDIR);
@@ -62,8 +62,8 @@ router.post('/', function(req, res, next) {
 
     //insert clip to merge controll
     db.get('sceneMergeControl')
-        .push(parsedRespons.init)
-        .write();
+    .push(parsedRespons.init)
+    .write();
 
     //answer
     res.send(parsedRespons);
@@ -105,7 +105,7 @@ router.get('/aerenderProcesses', function(req, res, next) {
     let startingPort = config.renderingProcesses.startingPort;
 
     for(let i = 0;i<numberOfProcesses;i++){
-        resultArray.push((startingPort+i)+1);
+        resultArray.push((startingPort+i) + 1);
     }
 
     res.json({port: resultArray});

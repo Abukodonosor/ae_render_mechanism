@@ -76,8 +76,8 @@ module.exports = {
             }
         }
     }
-
 };
+
 
 // download item and save to his folder
 function download(itemUrlextension, extension, name, pathForDownloading){
@@ -86,7 +86,7 @@ function download(itemUrlextension, extension, name, pathForDownloading){
         .on('error', function(err) {
             // handle error
         })
-        .pipe(fs.createWriteStream(pathForDownloading+name+extension));
+        .pipe(fs.createWriteStream(pathForDownloading+name + extension));
 }
 
 //find right extension
@@ -126,5 +126,17 @@ proc.stderr.on('data', function(data) {
 proc.on('close', function() {
     console.log('finished');
 });
+
+
+watermark:
+// position :0
+    overlay = (W*5)/100:(H*5)/100
+// position :1
+    overlay = ((W*95)/100)-w:(H*5)/100
+// position :2
+    overlay = ((W*95)/100)-w:((H*95)/100)-h
+// position :3
+    overlay = ((W*5)/100):((H*95)/100)-h
+
 
 * */
