@@ -3,7 +3,7 @@ let pathFromApiWinToC = "..\\..\\..";
 
 let config = {
     server:{
-        ip: 'http://192.168.0.16',
+        ip: 'http://192.168.0.23',
         port: ':3000',
     },
     pathTo_C:{

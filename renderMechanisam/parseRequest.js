@@ -107,11 +107,18 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
     //Asset parsing
     else if (prop.indexOf('bg_image')!= -1 ){
         let templatePath = format_server_download_path(asset[prop],'.jpg');
-        schema['assets'].push({'name': prop , 'src': asset[prop] });
+        // schema['assets'].push({'name': prop , 'src': asset[prop] });
+        schema['assets'].push({'name': 'bg_image.mp4', 'src': asset[prop] });
     }
-    else if (prop.indexOf('duration')!= -1 ){
+    // else if (prop.indexOf('duration')!= -1 ){
+    //     let templatePath = format_server_download_path(asset[prop],'.mp3');
+    //     // schema['assets'].push({'name': prop , 'src': asset[prop] });
+    //     schema['assets'].push({'name': 'duration', 'src': asset[prop] });
+    // }
+    else if (prop.indexOf('image')!= -1){
         let templatePath = format_server_download_path(asset[prop],'.mp3');
-        schema['assets'].push({'name': prop , 'src': asset[prop] });
+        // schema['assets'].push({'name': prop , 'src': asset[prop] });
+        schema['assets'].push({'name': 'image.png', 'src': asset[prop] });
     }
 
     //Expressions parsing
@@ -131,8 +138,12 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
 }
 
 /* pathTo for downloading files*/
-function format_server_download_path(path,sufix){
-    let templatePath = path.split("\\\\").slice(1).join("/");
+function format_server_download_path(path, sufix){
+    let templatePath = path.split("\\").slice(1).join("/");
+
+    console.log("JA")
+    console.log(path);
+
 
     if(sufix == '.aepx'){
         let array = templatePath.split("/");
@@ -140,6 +151,8 @@ function format_server_download_path(path,sufix){
         project_name = project_name.split(".")[0] +'.aepx';
         array.push(project_name);
         templatePath = array.join("/");
+        console.log("+==================")
+        console.log(templatePath);
     }
 
     templatePath.indexOf(sufix) == -1 ?templatePath += sufix: templatePath;
