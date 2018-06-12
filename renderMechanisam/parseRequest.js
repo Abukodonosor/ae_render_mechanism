@@ -87,6 +87,7 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
 
         //ading project assets path
         let templatePath = format_server_download_path(asset[prop],'.aepx');
+        templatePath = templatePath.replace(/ /g,"_");
         schema['assets'].push({'type': "project",'name': project_name , 'src': templatePath });
     }
     else if (prop == 'target'){
@@ -106,9 +107,20 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
 
     //Asset parsing
     else if (prop.indexOf('bg_image')!= -1 ){
-        let templatePath = format_server_download_path(asset[prop],'.jpg');
-        // schema['assets'].push({'name': prop , 'src': asset[prop] });
-        schema['assets'].push({'name': 'bg_image.mp4', 'src': asset[prop] });
+
+        if(asset[prop].indexOf('.png')!= -1){
+            let templatePath = format_server_download_path(asset[prop],'.png');
+            // schema['assets'].push({'name': prop , 'src': asset[prop] });
+            schema['assets'].push({'name': 'bg_image_png.png', 'src': asset[prop] });
+            schema['composition'] = "Final Comp 1";
+        }
+        else if(asset[prop].indexOf('.mp4')!= -1){
+            let templatePath = format_server_download_path(asset[prop],'.mp4');
+            // schema['assets'].push({'name': prop , 'src': asset[prop] });
+            schema['assets'].push({'name': 'bg_image.mp4', 'src': asset[prop] });
+            schema['composition'] = "Final Comp";
+        }
+
     }
     // else if (prop.indexOf('duration')!= -1 ){
     //     let templatePath = format_server_download_path(asset[prop],'.mp3');
@@ -116,7 +128,7 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
     //     schema['assets'].push({'name': 'duration', 'src': asset[prop] });
     // }
     else if (prop.indexOf('image')!= -1){
-        let templatePath = format_server_download_path(asset[prop],'.mp3');
+        let templatePath = format_server_download_path(asset[prop],'.png');
         // schema['assets'].push({'name': prop , 'src': asset[prop] });
         schema['assets'].push({'name': 'image.png', 'src': asset[prop] });
     }
@@ -125,25 +137,21 @@ function assetProp(prop,asset,reqObj,schema,scriptSch){
     else if(prop.indexOf('text')!= -1 ){
         scriptSch[prop] = "'"+asset[prop]+"'";
     }
-    else if(prop.indexOf('color')!= -1 ){
-        let color = hexRgb("#"+asset[prop], {format: 'array'});
-        color[3]= 1;
-        scriptSch[prop] = color;
-    }
-    else if(prop.indexOf('background_color')!= -1 ){
-        let color = hexRgb("#"+asset[prop], {format: 'array'});
-        color[3]= 1;
-        scriptSch[prop] = color;
-    }
+    // else if(prop.indexOf('color')!= -1 ){
+    //     let color = hexRgb("#"+asset[prop], {format: 'array'});
+    //     color[3]= 1;
+    //     scriptSch[prop] = color;
+    // }
+    // else if(prop.indexOf('background_color')!= -1 ){
+    //     let color = hexRgb("#"+asset[prop], {format: 'array'});
+    //     color[3]= 1;
+    //     scriptSch[prop] = color;
+    // }
 }
 
 /* pathTo for downloading files*/
 function format_server_download_path(path, sufix){
     let templatePath = path.split("\\").slice(1).join("/");
-
-    console.log("JA")
-    console.log(path);
-
 
     if(sufix == '.aepx'){
         let array = templatePath.split("/");
@@ -151,8 +159,7 @@ function format_server_download_path(path, sufix){
         project_name = project_name.split(".")[0] +'.aepx';
         array.push(project_name);
         templatePath = array.join("/");
-        console.log("+==================")
-        console.log(templatePath);
+
     }
 
     templatePath.indexOf(sufix) == -1 ?templatePath += sufix: templatePath;
