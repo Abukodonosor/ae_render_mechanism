@@ -51,11 +51,12 @@ function parseInit(data,reqObj){
 }
 
 function parseScene(data,reqObj){
-
+    
+    
     // converting to JSON
-    // let assets = "["+data+"]";
-    let assets = data;
-    // assets = JSON.parse(assets);
+    let assets = "["+data+"]";
+    // let assets = data;
+    assets = JSON.parse(assets);
 
     //loop true the scenes (Content)
     for(let asset of assets){

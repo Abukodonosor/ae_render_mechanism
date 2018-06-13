@@ -3,7 +3,7 @@ let pathFromApiWinToC = "..\\..\\..";
 
 let config = {
     server:{
-        ip: 'http://192.168.0.10',
+        ip: 'http://195.201.80.160',
         port: ':3000',
     },
     pathTo_C:{
@@ -24,9 +24,9 @@ let config = {
     },
     renderingProcesses:{
         aebinary: 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2018\\Support Files\\aerender.exe', //path to aerender
-        count: 2,
+        count: 15,
         startingPort: 6060,
-        renderLoopRepeat: 20, // seconds
+        renderLoopRepeat: 2, // seconds
     }
 };
 

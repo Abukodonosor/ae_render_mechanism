@@ -19,7 +19,8 @@ module.exports = {
 
         let mergeFile = realPath + "mergeFiles.txt";
         let soundFile = realPath + "sound.mp3";
-        let resultName = realPath + obj.fileName+".mp4";
+        let resName =  obj.fileName.replace(/ /g,'_') + ".mp4";
+        let resultName = realPath + resName;
 
         //deleting final video
         if(fs.existsSync(unlink)){
@@ -45,8 +46,19 @@ module.exports = {
         });
         proc.on('close', function() {
             console.log('finished');
-
+            console.log(obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn");
+            console.log(config.server.ip+config.server.port+"/"+obj.OrderId+"/"+ resName );
             //send to milan
+            request.post({
+                url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
+                form: {id: obj.OrderId, url: config.server.ip+config.server.port+"/"+obj.OrderId+"/"+ resName }
+            },function(err,res,body){
+                
+                console.log('Sended to milan');
+                console.log(body)
+                // return false;
+            });
+            
         });
 
     },

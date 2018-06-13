@@ -23,6 +23,9 @@ let clip_storage = config.clip_storage.path;
 router.post('/', function(req, res, next) {
 
     let param = req.body;
+
+    console.log(param);
+
     let parsedRespons = parseReq.parse_request(param);
     //init db if donsenot exist
     db.defaults({ scenes: [], sceneMergeControl: [] })
