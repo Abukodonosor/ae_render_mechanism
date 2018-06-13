@@ -14,6 +14,7 @@ let AvailablePorts = [];
 
     AvailablePorts = await RenderingProces.availablePorts();
 
+
     cron.schedule(`*/${renderLoopRepeat} * * * * *`, function(){
         (async()=> {
             console.log(AvailablePorts);
@@ -43,3 +44,36 @@ let AvailablePorts = [];
 //     // callback(port);
 //     // return false;
 // });
+/*
+
+    request.post({
+        url: config.server.ip+config.server.port+'/renderServer/mergeVideoControll',
+        form: {
+            status: "done",
+            obj: JSON.stringify({
+            OrderId: 178621,
+            status: 1,
+            audioUrl: "https://sdn-global-streaming-cache.3qsdn.com/6707/uploads/6707-P5lhalSwcVwAQrrDds21.mp3",
+            watermark: "",
+            watermarkpos: 0,
+            isFadeOut: 0,
+            fadeoutMins: 0,
+            volume: 1,
+            removeAudio: 0,
+            isAlphaChannel: 0,
+            IsJpeg: 0,
+            fileName: "16630_Weeding thinks",
+            updateVideoUrl: "http://18.196.40.196:3010",
+            totalcomp: 2
+            })
+        }
+    },function(err,res,body){
+        console.log("POSLAO");
+        // console.error(err);
+        // server.close();
+        // callback(port);
+        // // return false;
+    });
+
+
+*/

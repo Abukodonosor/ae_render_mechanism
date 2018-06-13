@@ -10,23 +10,44 @@ let ffmpeg = config.ffmpeg.path;
 let pathToResult = config.ffmpeg.resultClips;
 let unlinkFile = config.ffmpeg.unlink;
 
+//result path
+let finalPathFFmpeg = config.clip_storage.pathToFinalStorage;
+let relFinalPathFFmpeg = config.clip_storage.relPathToFinalStorage;
+
 module.exports = {
 
     runFFmpeg:(obj) => {
-        // path to folder where clips are seted
-        let realPath = pathToResult+"\\"+obj.OrderId+"\\";
-        let unlink = unlinkFile+"\\"+obj.OrderId+"\\"+obj.fileName+".mp4";
-
-        let mergeFile = realPath + "mergeFiles.txt";
-        let soundFile = realPath + "sound.mp3";
+        //userID
+        let userId = obj.fileName.split("_")[0];
         let resName =  obj.fileName.replace(/ /g,'_') + ".mp4";
-        let resultName = realPath + resName;
+
+        // path to folder where clips are seted
+        let realPath = pathToResult+"\\";
+        let unlink = unlinkFile+ "\\" + userId + "\\" +obj.OrderId+ "\\" + resName;
+
+        let mergeFile = realPath + "\\"  +obj.OrderId+ "\\"  + "mergeFiles.txt";
+        let soundFile = realPath + "\\"  +obj.OrderId+ "\\" + "sound.mp3";
+
+        let resultName = relFinalPathFFmpeg+ "\\" + userId+ "\\" + obj.OrderId + "\\" + resName;
+
+        //make user folder at C:/inetpub/wwwroot/videos
+        console.log(finalPathFFmpeg + "\\"+ userId);
+            if (!fs.existsSync(finalPathFFmpeg + "\\"+ userId)){
+                fs.mkdirSync(finalPathFFmpeg + "\\"+ userId);
+            }
+
+            //make order file if user exist
+            if (!fs.existsSync(finalPathFFmpeg+ "\\" + userId+ "\\" + obj.OrderId)){
+                fs.mkdirSync(finalPathFFmpeg + "\\" + userId+ "\\" + obj.OrderId);
+            }
+        //
 
         //deleting final video
         if(fs.existsSync(unlink)){
             fs.unlinkSync(unlink);
         }
 
+        console.log("----6");
         var args = [
             "-f","concat",
             "-safe","0",
