@@ -67,14 +67,16 @@ module.exports = {
         });
         proc.on('close', function() {
             console.log('finished');
+
             console.log(obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn");
-            console.log(config.server.ip+config.server.port+"/"+obj.OrderId+"/"+ resName );
+            console.log(config.server.ip+"/"+obj.OrderId+"/"+ resName );
+
             //send to milan
             request.post({
                 url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
-                form: {id: obj.OrderId, url: config.server.ip+config.server.port+"/"+obj.OrderId+"/"+ resName }
+                form: {id: obj.OrderId, url: config.server.ip+"/"+obj.OrderId+"/"+ resName }
             },function(err,res,body){
-                
+
                 console.log('Sended to milan');
                 console.log(body)
                 // return false;
