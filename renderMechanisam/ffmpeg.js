@@ -25,7 +25,8 @@ module.exports = {
         // path to folder where clips are seted
         let realPath = pathToResult+"\\";
         let unlink = unlinkFile+ "\\" + userId + "\\" +obj.OrderId+ "\\" + resName;
-        console.log(unlink);
+        let unlinkImage = unlinkFile+ "\\" + userId + "\\" +obj.OrderId+ "\\" +resImgName;
+        
         let mergeFile = realPath + "\\"  +obj.OrderId+ "\\"  + "mergeFiles.txt";
         let soundFile = realPath + "\\"  +obj.OrderId+ "\\" + "sound.mp3";
 
@@ -47,6 +48,10 @@ module.exports = {
         //deleting final video
         if(fs.existsSync(unlink)){
             fs.unlinkSync(unlink);
+        }
+        //deleting final image
+        if(fs.existsSync(unlinkImage)){
+            fs.unlinkSync(unlinkImage);
         }
 
         console.log("----6");
@@ -77,7 +82,11 @@ module.exports = {
             //send to milan
             request.post({
                 url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
-                form: {"id": obj.OrderId+"", "video_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resName }
+                form: {
+                    "id": obj.OrderId+"",
+                    "video_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resName,
+                    "image_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resImgName
+                }
             },function(err,res,body){
 
                 console.log('Sended to milan');
