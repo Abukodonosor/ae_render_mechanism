@@ -17,7 +17,7 @@ let AvailablePorts = [];
 
     cron.schedule(`*/${renderLoopRepeat} * * * * *`, function(){
         (async()=> {
-            console.log(AvailablePorts);
+            console.log("Free aerender processes: "+ AvailablePorts.length);
             if (AvailablePorts.length != 0 && await RenderingProces.peekScene()) {
                 //take port for
                 let port = AvailablePorts.pop();

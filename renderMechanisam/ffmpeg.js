@@ -20,15 +20,17 @@ module.exports = {
         //userID
         let userId = obj.fileName.split("_")[0];
         let resName =  obj.fileName.replace(/ /g,'_') + ".mp4";
+        let resImgName = obj.fileName.replace(/ /g,'_') + ".jpg";
 
         // path to folder where clips are seted
         let realPath = pathToResult+"\\";
         let unlink = unlinkFile+ "\\" + userId + "\\" +obj.OrderId+ "\\" + resName;
-
+        console.log(unlink);
         let mergeFile = realPath + "\\"  +obj.OrderId+ "\\"  + "mergeFiles.txt";
         let soundFile = realPath + "\\"  +obj.OrderId+ "\\" + "sound.mp3";
 
         let resultName = relFinalPathFFmpeg+ "\\" + userId+ "\\" + obj.OrderId + "\\" + resName;
+        let imageName = relFinalPathFFmpeg+ "\\" + userId+ "\\" + obj.OrderId + "\\" + resImgName;
 
         //make user folder at C:/inetpub/wwwroot/videos
         console.log(finalPathFFmpeg + "\\"+ userId);
@@ -53,7 +55,8 @@ module.exports = {
             "-safe","0",
             "-i", mergeFile,
             "-i", soundFile,
-            "-c:a", "copy", "-shortest", resultName
+            "-c:a", "copy", "-shortest", resultName,
+            "-vframes" ,"1", "-q:v", "5", imageName
         ];
 
 
@@ -74,7 +77,7 @@ module.exports = {
             //send to milan
             request.post({
                 url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
-                form: {id: obj.OrderId, url: config.server.ip+"/"+obj.OrderId+"/"+ resName }
+                form: {"id": obj.OrderId+"", "video_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resName }
             },function(err,res,body){
 
                 console.log('Sended to milan');
