@@ -5,6 +5,12 @@ let spawn = require('child_process').spawn;
 var fs = require('fs');
 var request = require('request');
 
+var fluent_ffmpeg = require('fluent-ffmpeg');
+fluent_ffmpeg.setFfprobePath("C:\\rend_mecha\\ffmpeg\\bin\\ffprobe.exe");
+fluent_ffmpeg.setFfmpegPath("C:\\rend_mecha\\ffmpeg\\bin\\ffmpeg.exe");
+
+let pathFromApiToC = "../../..";
+
 let ffmpeg = config.ffmpeg.path;
 
 let pathToResult = config.ffmpeg.resultClips;
@@ -26,7 +32,7 @@ module.exports = {
         let realPath = pathToResult+"\\";
         let unlink = unlinkFile+ "\\" + userId + "\\" +obj.OrderId+ "\\" + resName;
         let unlinkImage = unlinkFile+ "\\" + userId + "\\" +obj.OrderId+ "\\" +resImgName;
-        
+
         let mergeFile = realPath + "\\"  +obj.OrderId+ "\\"  + "mergeFiles.txt";
         let soundFile = realPath + "\\"  +obj.OrderId+ "\\" + "sound.mp3";
 
@@ -35,14 +41,14 @@ module.exports = {
 
         //make user folder at C:/inetpub/wwwroot/videos
         console.log(finalPathFFmpeg + "\\"+ userId);
-            if (!fs.existsSync(finalPathFFmpeg + "\\"+ userId)){
-                fs.mkdirSync(finalPathFFmpeg + "\\"+ userId);
-            }
+        if (!fs.existsSync(finalPathFFmpeg + "\\"+ userId)){
+            fs.mkdirSync(finalPathFFmpeg + "\\"+ userId);
+        }
 
-            //make order file if user exist
-            if (!fs.existsSync(finalPathFFmpeg+ "\\" + userId+ "\\" + obj.OrderId)){
-                fs.mkdirSync(finalPathFFmpeg + "\\" + userId+ "\\" + obj.OrderId);
-            }
+        //make order file if user exist
+        if (!fs.existsSync(finalPathFFmpeg+ "\\" + userId+ "\\" + obj.OrderId)){
+            fs.mkdirSync(finalPathFFmpeg + "\\" + userId+ "\\" + obj.OrderId);
+        }
         //
 
         //deleting final video
@@ -54,16 +60,14 @@ module.exports = {
             fs.unlinkSync(unlinkImage);
         }
 
-        console.log("----6");
         var args = [
             "-f","concat",
             "-safe","0",
             "-i", mergeFile,
             "-i", soundFile,
             "-c:a", "copy", "-shortest", resultName,
-            "-vframes" ,"1", "-q:v", "5", imageName
+            // "-vframes" ,"1", "-q:v", "5", imageName
         ];
-
 
         var proc = spawn(ffmpeg, args);
 
@@ -73,12 +77,18 @@ module.exports = {
         proc.stderr.on('data', function(data) {
             console.log(data.toString());
         });
+
         proc.on('close', function() {
             console.log('finished');
-
-            console.log(obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn");
-            console.log(config.server.ip+"/"+obj.OrderId+"/"+ resName );
-
+            //screenshoot => taken
+            console.log("AJDE BREj");
+            var proc = new fluent_ffmpeg({source: pathFromApiToC+"/inetpub/wwwroot/videos/"+ userId + "/" + obj.OrderId + "/" + resName})
+                .takeScreenshots({
+                    count: 1,
+                    timemarks: ['50%'],
+                    size: '639x360',
+                    filename: pathFromApiToC+"/inetpub/wwwroot/videos/"+ userId + "/" + obj.OrderId + "/" + resImgName
+                });
             //send to milan
             request.post({
                 url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
@@ -93,7 +103,7 @@ module.exports = {
                 console.log(body)
                 // return false;
             });
-            
+
         });
 
     },
@@ -138,10 +148,10 @@ function download(itemUrlextension, extension, name, pathForDownloading){
 
 //find right extension
 function findRightExtension( string, extensions){
-        for(let ex of extensions){
-            if(string.indexOf(ex) != -1)
-                return ex;
-        }
+    for(let ex of extensions){
+        if(string.indexOf(ex) != -1)
+            return ex;
+    }
 }
 
 
