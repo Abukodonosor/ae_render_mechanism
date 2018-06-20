@@ -1,11 +1,10 @@
 let pathFromApiToC= "../../..";
 let pathFromApiWinToC = "..\\..\\..";
-
 let finalMergeResult= "C:\\inetpub\\wwwroot\\videos";
 
 let config = {
     server:{
-        ip: 'http://195.201.80.160',
+        ip: 'http://192.168.0.10',
         port: ':3000',
     },
     pathTo_C:{

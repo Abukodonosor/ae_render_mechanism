@@ -23,13 +23,11 @@ let clip_storage = config.clip_storage.path;
 router.post('/', function(req, res, next) {
 
     let param = req.body;
-
-    console.log(param);
-
     let parsedRespons = parseReq.parse_request(param);
     //init db if donsenot exist
-    db.defaults({ scenes: [], sceneMergeControl: [] })
-    .write();
+    db.defaults({ scenes: [], sceneMergeControl: [] , requestHistory: []})
+        .write();
+
 
     //make folder to store results
     if (!fs.existsSync(clip_storage)){
@@ -67,6 +65,10 @@ router.post('/', function(req, res, next) {
     db.get('sceneMergeControl')
     .push(parsedRespons.init)
     .write();
+    //insert json to history
+    db.get('requestHistory')
+        .push(param)
+        .write();
 
     //answer
     res.send(parsedRespons);
@@ -138,7 +140,22 @@ router.post('/mergeVideoControll', function(req, res, next) {
     else if (status == "broken"){
         //delete item from mergeControl
         db.get('sceneMergeControl').remove({OrderId:obj.OrderId}).write();
+        let resName =  obj.fileName.replace(/ /g,'_') + ".mp4";
+        let resImgName = obj.fileName.replace(/ /g,'_') + ".jpg";
         //*** ukloni sve scene vezane za njega u scenes
+        request.post({
+            url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
+            form: {
+                "id": obj.OrderId+"",
+                "video_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resName,
+                "image_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resImgName,
+                "status": "broken"
+            }
+        },function(err,res,body){
+            console.log('Sended to milan Broken');
+            console.log(body);
+            // return false;
+        });
         //*** ili izmapiraj da samo renderuje one koji mu fale ... kada opet posalje reevio
         //javi na reevio
     }

@@ -10,7 +10,6 @@ fluent_ffmpeg.setFfprobePath("C:\\rend_mecha\\ffmpeg\\bin\\ffprobe.exe");
 fluent_ffmpeg.setFfmpegPath("C:\\rend_mecha\\ffmpeg\\bin\\ffmpeg.exe");
 
 let pathFromApiToC = "../../..";
-
 let ffmpeg = config.ffmpeg.path;
 
 let pathToResult = config.ffmpeg.resultClips;
@@ -80,8 +79,8 @@ module.exports = {
 
         proc.on('close', function() {
             console.log('finished');
+
             //screenshoot => taken
-            console.log("AJDE BREj");
             var proc = new fluent_ffmpeg({source: pathFromApiToC+"/inetpub/wwwroot/videos/"+ userId + "/" + obj.OrderId + "/" + resName})
                 .takeScreenshots({
                     count: 1,
@@ -89,18 +88,23 @@ module.exports = {
                     size: '639x360',
                     filename: pathFromApiToC+"/inetpub/wwwroot/videos/"+ userId + "/" + obj.OrderId + "/" + resImgName
                 });
+
             //send to milan
             request.post({
                 url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
                 form: {
                     "id": obj.OrderId+"",
                     "video_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resName,
-                    "image_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resImgName
+                    "image_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resImgName,
+                    "status": "done"
                 }
             },function(err,res,body){
 
                 console.log('Sended to milan');
-                console.log(body)
+                console.log("id: "+ obj.OrderId+"",
+                    "video_url: "+ config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resName,
+                    "image_url: "+ config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resImgName);
+                console.log(body);
                 // return false;
             });
 
