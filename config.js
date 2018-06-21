@@ -2,10 +2,12 @@ let pathFromApiToC= "../../..";
 let pathFromApiWinToC = "..\\..\\..";
 let finalMergeResult= "C:\\inetpub\\wwwroot\\videos";
 
+let mainConfig = require('./mainConfig.js');
+
 let config = {
     server:{
-        ip: 'http://192.168.0.10',
-        port: ':3000',
+        ip: mainConfig.server.ip ,
+        port: mainConfig.server.port ,
     },
     pathTo_C:{
         path:"../",
@@ -27,10 +29,10 @@ let config = {
 
     },
     renderingProcesses:{
-        aebinary: 'C:\\Program Files\\Adobe\\Adobe After Effects CC 2018\\Support Files\\aerender.exe', //path to aerender
-        count: 15,
+        aebinary: mainConfig.renderingProcesses.aebinary, //path to aerender
+        count: mainConfig.renderingProcesses.count,
         startingPort: 6060,
-        renderLoopRepeat: 7, // seconds
+        renderLoopRepeat: mainConfig.renderingProcesses.renderLoopRepeat, // seconds
     }
 };
 

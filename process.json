@@ -1,0 +1,10 @@
+{
+  "apps" : [{
+    "name"        : "ReqServer",
+    "script"      : "./renderServerApi/bin/www"
+  },{
+    "name"       : "RenderServer",
+    "script"     : "./aerenderLoop.js"
+  }]
+}
+
