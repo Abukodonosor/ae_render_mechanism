@@ -4,6 +4,7 @@ let config = require('../config');
 let spawn = require('child_process').spawn;
 var fs = require('fs');
 var request = require('request');
+const RenderHistory = require('./DBhistory');
 
 var fluent_ffmpeg = require('fluent-ffmpeg');
 fluent_ffmpeg.setFfprobePath("C:\\rend_mecha\\ffmpeg\\bin\\ffprobe.exe");
@@ -79,33 +80,32 @@ module.exports = {
 
         proc.on('close', function() {
             console.log('finished');
-
-            //screenshoot => taken
+            //screenshoot maker
             var proc = new fluent_ffmpeg({source: pathFromApiToC+"/inetpub/wwwroot/videos/"+ userId + "/" + obj.OrderId + "/" + resName})
-                .takeScreenshots({
-                    count: 1,
-                    timemarks: ['50%'],
-                    size: '639x360',
-                    filename: pathFromApiToC+"/inetpub/wwwroot/videos/"+ userId + "/" + obj.OrderId + "/" + resImgName
-                });
+            .takeScreenshots({
+                count: 1,
+                timemarks: ['50%'],
+                size: '639x360',
+                filename: pathFromApiToC+"/inetpub/wwwroot/videos/"+ userId + "/" + obj.OrderId + "/" + resImgName
+            });
 
+            let response = {
+                "id": obj.OrderId+"",
+                "video_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resName,
+                "image_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resImgName,
+                "status": "done"
+            };
             //send to milan
             request.post({
                 url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
-                form: {
-                    "id": obj.OrderId+"",
-                    "video_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resName,
-                    "image_url": config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resImgName,
-                    "status": "done"
-                }
+                form: response
             },function(err,res,body){
-
-                console.log('Sended to milan');
-                console.log("id: "+ obj.OrderId+"",
-                    "video_url: "+ config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resName,
-                    "image_url: "+ config.server.ip+"/videos/"+userId+"/" + obj.OrderId + "/" + resImgName);
+                console.log('Send json_response to reevio');
                 console.log(body);
-                // return false;
+                RenderHistory.updateHistory(obj, "done", response, callback=>{
+                    console.log(callback);
+                    return false;
+                })
             });
 
         });

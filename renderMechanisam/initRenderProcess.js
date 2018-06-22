@@ -10,6 +10,8 @@ let aebinary = config.renderingProcesses.aebinary;
 
 const renderer  = require('../renderMechanisam/nexrender/index').renderer;
 const Project  = require('../renderMechanisam/nexrender/index').Project;
+const RenderHistory = require('./DBhistory');
+
 const http      = require('http');
 const url       = require('url');
 const path      = require('path');
@@ -108,6 +110,7 @@ module.exports = {
                     form: {status: "broken", obj: JSON.stringify(project1.full_object) }
                 },function(err,res,body){
                     console.error(err);
+                    BrokenOrderUpdate(project1.full_object);
                     server.close();
                     callback(port);
                     // return false;
@@ -115,6 +118,7 @@ module.exports = {
             });
         });
     }
+
 
 };
 
@@ -124,3 +128,12 @@ function changePort(list,port){
     }
 }
 
+
+function BrokenOrderUpdate(obj){
+    /* add warrning about broken  tempalte and order  */
+    RenderHistory.updateHistory(obj, "broken", {}, callback=>{
+        console.log(callback);
+        return false;
+    });
+
+}

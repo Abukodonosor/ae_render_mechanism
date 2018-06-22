@@ -11,9 +11,7 @@ let AvailablePorts = [];
 
 // main function
 (async function(){
-
     AvailablePorts = await RenderingProces.availablePorts();
-
 
     cron.schedule(`*/${renderLoopRepeat} * * * * *`, function(){
         (async()=> {
@@ -31,8 +29,8 @@ let AvailablePorts = [];
             }
         })();
     });
-
 }());
+
 
 
 // request.post({

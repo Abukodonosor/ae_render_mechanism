@@ -7,6 +7,7 @@ const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
 const db = low(adapter);
+const DbHistory = require('../../renderMechanisam/DBhistory.js');
 
 // request parse
 let parseReq = require('../../renderMechanisam/parseRequest');
@@ -25,7 +26,7 @@ router.post('/', function(req, res, next) {
     let param = req.body;
     let parsedRespons = parseReq.parse_request(param);
     //init db if donsenot exist
-    db.defaults({ scenes: [], sceneMergeControl: [] , requestHistory: []})
+    db.defaults({ scenes: [], sceneMergeControl: [] })
         .write();
 
 
@@ -65,12 +66,11 @@ router.post('/', function(req, res, next) {
     db.get('sceneMergeControl')
     .push(parsedRespons.init)
     .write();
-    //insert json to history
-    db.get('requestHistory')
-        .push(param)
-        .write();
 
-    //answer
+    DbHistory.insertHistory(param,callback =>{
+        console.log(callback+" => OrderId: "+ param.OrderId);
+        return false;
+    });
     res.send(parsedRespons);
 });
 
