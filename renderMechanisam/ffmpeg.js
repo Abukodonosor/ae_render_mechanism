@@ -96,17 +96,19 @@ module.exports = {
                 "status": "done"
             };
             //send to milan
-            request.post({
-                url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
-                form: response
-            },function(err,res,body){
-                console.log('Send json_response to reevio');
-                console.log(body);
-                RenderHistory.updateHistory(obj, "done", response, callback=>{
-                    console.log(callback);
-                    return false;
-                })
+            RenderHistory.updateHistory(obj, "done", response, callback =>{
+                console.log(callback);
+                request.post({
+                    url: obj.updateVideoUrl+"/api/dataclay/rlo30U8cLn",
+                    form: response
+                },function(err,res,body){
+                    console.log('Send json_response to reevio');
+                    console.log(body);
+
+                });
+                // return false;
             });
+
 
         });
 

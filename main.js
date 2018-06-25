@@ -15,14 +15,17 @@ switch(key){
     case 'start':
         shell.exec("pm2 start process.json");
         console.log("pm2 start processes !");
+        process.exit(0);
         break;
     case 'stop':
         shell.exec("pm2 stop process.json");
         console.log("pm2 stoped processes !");
+        process.exit(0);
         break;
     case 'delete':
         shell.exec("pm2 delete process.json");
         console.log("pm2 delete processes !");
+        process.exit(0);
         break;
     case 'migrate':
         RenderHistory.historyTableMigration(callback=>{

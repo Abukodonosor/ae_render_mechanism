@@ -17,8 +17,14 @@ class RenderHistory {
     static updateHistory(obj, status, json_response, callback){
         let q = "UPDATE renderhistory SET status = ? , json_response = ?, timestamp_response = ? WHERE OrderId = ?";
         let timestamp_response = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
-
-        DB.connection.query(q,[status, JSON.stringify(json_response), timestamp_response, obj.full_object.OrderId],(err,rows)=>{
+        let OrderId;
+        if(obj.full_object == undefined)
+            OrderId = obj.OrderId;
+        else
+            OrderId = obj.full_object.OrderId;
+        console.log("===================");
+        console.log(OrderId);
+        DB.connection.query(q,[status, JSON.stringify(json_response), timestamp_response, OrderId],(err,rows)=>{
             if (err) throw err;
             callback("updated");
             return false;
@@ -42,7 +48,7 @@ class RenderHistory {
     }
 
     static historyTableMigration(callback){
-        let q = "create table renderhistory\n" +
+        let q = "create table arenderhistory\n" +
             "(\n" +
             "  id                 int auto_increment\n" +
             "    primary key,\n" +
@@ -56,7 +62,9 @@ class RenderHistory {
             "\n";
         let message;
         DB.connection.query(q, [], (err,rows)=>{
-            if(err) message = "You have done this migration before!";
+            if(err) {
+                throw err;
+            }
             else{
                 message = "Migrate is done succesfull";
             }
