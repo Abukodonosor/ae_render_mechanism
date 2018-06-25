@@ -18,7 +18,7 @@ class RenderHistory {
         let q = "UPDATE renderhistory SET status = ? , json_response = ?, timestamp_response = ? WHERE OrderId = ?";
         let timestamp_response = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
 
-        DB.connection.query(q,[status, JSON.stringify(json_response), timestamp_response, obj.OrderId],(err,rows)=>{
+        DB.connection.query(q,[status, JSON.stringify(json_response), timestamp_response, obj.full_object.OrderId],(err,rows)=>{
             if (err) throw err;
             callback("updated");
             return false;
@@ -37,6 +37,30 @@ class RenderHistory {
                 data : data,
                 ip : json_request.updateVideoUrl
             });
+            return false;
+        });
+    }
+
+    static historyTableMigration(callback){
+        let q = "create table renderhistory\n" +
+            "(\n" +
+            "  id                 int auto_increment\n" +
+            "    primary key,\n" +
+            "  OrderId            int      null,\n" +
+            "  status             tinytext null,\n" +
+            "  json_request       longtext null,\n" +
+            "  json_response      longtext null,\n" +
+            "  timestamp_request  datetime null,\n" +
+            "  timestamp_response datetime null\n" +
+            ");\n" +
+            "\n";
+        let message;
+        DB.connection.query(q, [], (err,rows)=>{
+            if(err) message = "You have done this migration before!";
+            else{
+                message = "Migrate is done succesfull";
+            }
+            callback(message);
             return false;
         });
     }

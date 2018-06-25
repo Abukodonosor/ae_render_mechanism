@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@slack/client": "^4.3.1",
     "async": "^2.6.1",
     "aws-sdk": "^2.246.1",
     "cookie-parser": "~1.4.3",

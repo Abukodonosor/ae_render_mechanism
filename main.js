@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 var shell = require("shelljs");
+let RenderHistory = require('./renderMechanisam/DBhistory.js');
 
 const args = process.argv;
 
@@ -23,8 +24,15 @@ switch(key){
         shell.exec("pm2 delete process.json");
         console.log("pm2 delete processes !");
         break;
+    case 'migrate':
+        RenderHistory.historyTableMigration(callback=>{
+            console.log(callback);
+            process.exit(0);
+        });
+        break;
+
     default:
-        console.log("Valid argumets are : start , stop , delete. You entered: " + key);
+        console.log("Valid argumets are : start , stop , delete, migrate. You entered: " + key);
         break;
 }
 
@@ -36,6 +44,5 @@ switch(key){
 
 "instances"  : 4,
 "exec_mode"  : "cluster"
-
 
 */

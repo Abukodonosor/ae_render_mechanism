@@ -110,15 +110,15 @@ module.exports = {
                     form: {status: "broken", obj: JSON.stringify(project1.full_object) }
                 },function(err,res,body){
                     console.error(err);
-                    BrokenOrderUpdate(project1.full_object);
-                    server.close();
-                    callback(port);
+                    BrokenOrderUpdate(project1, lastThing => {
+                        server.close();
+                        callback(port);
+                    });
                     // return false;
                 });
             });
         });
     }
-
 
 };
 
@@ -128,12 +128,27 @@ function changePort(list,port){
     }
 }
 
+function BrokenOrderUpdate(obj,end){
 
-function BrokenOrderUpdate(obj){
-    /* add warrning about broken  tempalte and order  */
-    RenderHistory.updateHistory(obj, "broken", {}, callback=>{
-        console.log(callback);
-        return false;
+    const IncomingWebhook = require('@slack/client').IncomingWebhook;
+    const url = 'https://hooks.slack.com/services/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';
+    const webhook = new IncomingWebhook(url);
+    let message = "Broken template or assets !!    ";
+        message += `OrderId: ${obj.full_object.OrderId}\n
+                    ServerIP: ${config.server.ip}`;
+
+    webhook.send(message, function (err, res) {
+        if (err) {
+            console.log('Error:', err);
+        } else {
+            console.log('Message sent: ');
+        }
+
+        /* add warrning about broken  tempalte and order  */
+        RenderHistory.updateHistory(obj, "broken", {}, callback => {
+            end(callback);
+            return false;
+        });
     });
 
 }
