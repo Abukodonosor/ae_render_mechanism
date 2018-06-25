@@ -13,6 +13,7 @@ We create this system because we have alot of dinamic tempaltes, for our needs. 
 All you have to config is in mainConfig.js file.
 
 Main params are:
+```
 let config = {  
   server:{
         ip: 'http://YOUR_IP',  /* YOUR_IP => replace your ip with YOUR_IP */
@@ -24,9 +25,14 @@ let config = {
         renderLoopRepeat: 7, /* coldown of renderProcess */
     }
 };
+
+```
 To run this peace of code, you need to run:
 
-Make folder at ( C:\inetpub\wwwroot\videos) 0.npm install pm2 -g => 1st we need to install this package globaly ( to manage proccesses and take cotnrol over clusters)
+0. Make folder at ( C:\inetpub\wwwroot\videos)
+1. npm install pm2 -g => 1st we need to install this package globaly ( to manage proccesses and take cotnrol over clusters)
+
+
 
 node main.js start => will start pm2 clustered procceses (also available arguments are [start,stop,delete]
 
