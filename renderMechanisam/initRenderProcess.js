@@ -110,10 +110,16 @@ module.exports = {
                     form: {status: "broken", obj: JSON.stringify(project1.full_object) }
                 },function(err,res,body){
                     console.error(err);
+                    server.close();
+                    callback(port);
+
+                    /*
+                    slack notification of broken template
                     BrokenOrderUpdate(project1, lastThing => {
                         server.close();
                         callback(port);
                     });
+                    */
                     // return false;
                 });
             });
